@@ -7,16 +7,12 @@ from config import settings
 
 def fmt_number(value: float) -> str:
     """
-    Format a float for display.
-    - Strips unnecessary trailing zeros.
-    - Uses up to `settings.result_precision` decimal places.
-
-    Examples:
-        100.0     → "100"
-        5.0       → "5"
-        3778.343  → "3778.343"
-        0.025     → "0.025"
+    Format a float for display with adaptive precision.
+    - Very small numbers (abs < 1e-6): scientific notation
+    - Normal numbers: strip trailing zeros, up to result_precision decimals
     """
+    if value != 0 and abs(value) < 1e-6:
+        return f"{value:.2e}"
     formatted = f"{value:.{settings.result_precision}f}".rstrip("0").rstrip(".")
     return formatted
 
